@@ -6,7 +6,8 @@ public class Teacher extends User {
 
     public Teacher(String firstname, String laststname, String patronymic, long teacherID) {
         super(firstname, laststname, patronymic);
-        this.teacherID=teacherID;
+        this.teacherID = teacherID;
+
 
     }
 
@@ -17,4 +18,5 @@ public class Teacher extends User {
     public void setTeacherID(long teacherID) {
         this.teacherID = teacherID;
     }
+
 }

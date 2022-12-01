@@ -1,14 +1,12 @@
 package ru.gb.oseminar.controller;
 
-import ru.gb.oseminar.data.Student;
-import ru.gb.oseminar.data.StudyGroup;
-import ru.gb.oseminar.data.Teacher;
-import ru.gb.oseminar.data.User;
+import ru.gb.oseminar.data.*;
 import ru.gb.oseminar.service.StudyGroupService;
 import ru.gb.oseminar.service.UserService;
 import ru.gb.oseminar.view.StudentView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Controller {
@@ -16,16 +14,27 @@ public class Controller {
     private final UserService userService = new UserService();
     private final StudentView studentView = new StudentView();
 
-    private final StudyGroupService studyGroupService = new StudyGroupService();
+    private StudyGroupService studyGroupService;
+
+    public Controller() {
+        this.studyGroupService = new StudyGroupService();
+    }
+
+    public void createNewStudyGroup(StudyGroupService studyGroupService) {
+        this.studyGroupService = studyGroupService;
+    }
 
     public void createUser(String firstname, String laststname, String patronymic) {
         userService.createUser(firstname, laststname, patronymic);
-        List<User> students = userService.getAll();
-        studentView.sendOnControl(students);
     }
 
     public Teacher createTeacher(String firstName, String lastName, String patronymic, Long teacherId){
         return userService.createUser(firstName, lastName, patronymic, teacherId);
+    }
+
+    public void showAllStudents() {
+        List<User> students = userService.getAll();
+        studentView.sendOnConsole(students);
     }
 
     public List<Student> getOnlyStudents(){
@@ -38,16 +47,32 @@ public class Controller {
         studentView.sendOnConsole(teachers);
     }
 
-    public void showAllStudents() {
-        List<User> students = userService.getAll();
-        studentView.sendOnConsole(students);
-    }
-    public List<StudyGroup> createTimetable(Teacher teacher, List<Student> studentList) {
-        return studyGroupService.completeStudyGroup(teacher, studentList);
+    public StudyGroupService createStudyGroups() {
+        return new StudyGroupService();
     }
 
-    public void showStudyGroups(List<StudyGroup> studyGroups){
-        studentView.showStudyGroups(studyGroups);
+    public void showStudyGroups() {
+        studentView.showStudyGroups(this.studyGroupService.getStudyGroupList());
     }
+
+    public void showSortStudyGroup(List<Student> studentList){
+        Collections.sort(studentList, new StudyGroupComparator());
+        studentView.showStudents(studentList);
+    }
+
+    public void createTimetable(Teacher teacher, List<Student> studentList, Integer groupId) {
+        this.studyGroupService.completeStudyGroup(teacher, studentList, groupId);
+    }
+
+    public void clearUsers(){
+        this.userService.clearAll();
+    };
+
+    public void showStudentsInGroups() {
+        this.studentView.showStudyGroups(this.studyGroupService.getStudyGroupList());
+
+    }
+
+
 }
 

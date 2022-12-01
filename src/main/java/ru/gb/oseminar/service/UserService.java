@@ -21,17 +21,22 @@ public class UserService implements DataService {
 
 
     @Override
-    public void createUser(String firstname, String laststname, String patronymic) {
-        long id=0;
-        for (User item : this.users){
-            if (item instanceof Student){
-                if (id < ((Student) item).getStudentID()){
-                    id = ((Student) item).getStudentID();
+    public void createUser(String firstName, String lastName, String patronymic) {
+        long id = 0L;
+        for (User user : this.users) {
+            if (user instanceof Student) {
+                if (id < ((Student) user).getStudentID()) {
+                    id = ((Student) user).getStudentID();
                 }
             }
         }
-        this.users.add(new Student(firstname, laststname, patronymic, id++));
+        this.users.add(new Student(firstName, lastName, patronymic, ++id));
     }
+
+    public void  clearAll(){
+        this.users.clear();
+    }
+
 
     @Override
     public List<User> getAll() {
